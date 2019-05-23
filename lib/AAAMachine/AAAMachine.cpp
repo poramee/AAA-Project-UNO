@@ -10,25 +10,43 @@ void Machine::init() {
   Serial.begin(9600);
 }
 
-bool Machine::targetLock(){
+int Machine::targetLock(){
   using namespace Ultrasonic;
   using namespace Base;
 
-  int sonarDetect[3];
-  sonarDetect[0] = left.detect();
-  delay(20);
-  sonarDetect[1] = center.detect();
-  delay(20);
-  sonarDetect[2] = right.detect();
-  delay(20);
+  const int leftPing = left.ping();
+  const int centerPing = center.ping();
+  const int rightPing = right.ping();
 
-  Serial.print(sonarDetect[0]);
-  Serial.print(sonarDetect[1]);
-  Serial.println(sonarDetect[2]);
-  if((sonarDetect[0] == 0 and sonarDetect[1] == 0 and sonarDetect[2] == 1) or (sonarDetect[0] == 0 and sonarDetect[1] == 1 and sonarDetect[2] == 1)) angleIncrement();
-  else if((sonarDetect[0] == 1 and sonarDetect[1] == 0 and sonarDetect[2] == 0) or (sonarDetect[0] == 1 and sonarDetect[1] == 1 and sonarDetect[2] == 0)) angleDecrement();
-  else return true;
-  return false;
+
+  int min = 1e9;
+  int minDirection = -1;
+  if(leftPing < min and leftPing > 0){
+    min = leftPing;
+    minDirection = 0;
+  }
+  if(centerPing < min and centerPing > 0){
+    min = centerPing;
+    minDirection = 1;
+  }
+  if(rightPing < min and rightPing > 0){
+    min = rightPing;
+    minDirection = 2;
+  }
+
+  if(min < DEFAULT_TRESHOLD){
+    if(minDirection == 0){
+      angleIncrement();
+      return 0;
+    }
+    else if(minDirection == 2){
+      angleDecrement();
+      return 0;
+    }
+    else if(minDirection == 1) return 1;
+
+  }
+  else return -1;
 }
 
 void Machine::test(){

@@ -15,7 +15,7 @@ namespace Machine{
     extern Mode mode;
 
     void init();
-    bool targetLock();
+    int targetLock();
     void test();
     int getButtonPressed();
 }
