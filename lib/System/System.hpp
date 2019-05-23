@@ -6,6 +6,5 @@ namespace System{
         Fire,
         Service
     };
-    const int pinSwitch = 11;
     extern Status machineState;
 }

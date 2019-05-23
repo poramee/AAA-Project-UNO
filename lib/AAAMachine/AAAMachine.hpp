@@ -2,15 +2,20 @@
 #include "TriggerController.hpp"
 #include "System.hpp"
 #include "Ultrasonic.hpp"
+#include "Microphone.hpp"
+
 
 namespace Machine{
     enum Mode{
         Sonar,
-        Sound
+        Sound,
+        Service
     };
+    const int pinButton = 11;
     extern Mode mode;
 
     void init();
     bool targetLock();
     void test();
+    int getButtonPressed();
 }

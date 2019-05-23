@@ -41,3 +41,21 @@ void Machine::test(){
   Serial.println(Ultrasonic::right.ping());
   delay(20);
 }
+
+int press = 0;
+int lastPress = LOW;
+unsigned long long lastPressMillis = millis();
+int Machine::getButtonPressed(){
+  if(digitalRead(pinButton) == HIGH and lastPress == LOW){
+    lastPress = HIGH;
+    ++press;
+    lastPressMillis = millis();
+  }
+  else if(digitalRead(pinButton) == LOW and lastPress == HIGH) lastPress = LOW;
+  else if(digitalRead(pinButton) == LOW and lastPress == LOW and millis() - lastPressMillis >= 300){
+    const int ret = press;
+    press = 0;
+    return ret;
+  }
+  return 0;
+}
