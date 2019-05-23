@@ -6,5 +6,11 @@ namespace Serial{
 
     extern SoftwareSerial softSerial;
 
-    bool poke();
+    enum Command{
+        Speaker,
+        LCD,
+        BlinkLED
+    };
+    
+    void sendTo(Command cmd,String string);
 }

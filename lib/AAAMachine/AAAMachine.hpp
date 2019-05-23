@@ -4,7 +4,13 @@
 #include "Ultrasonic.hpp"
 
 namespace Machine{
+    enum Mode{
+        Sonar,
+        Sound
+    };
+    extern Mode mode;
+
     void init();
-    void targetLock();
+    bool targetLock();
     void test();
 }

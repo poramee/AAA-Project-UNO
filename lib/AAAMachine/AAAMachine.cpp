@@ -2,13 +2,15 @@
 
 using namespace Machine;
 
+Mode Machine::mode = Mode::Sonar;
+
 void Machine::init() {
   Base::init();
   Trigger::init();
   Serial.begin(9600);
 }
 
-void Machine::targetLock(){
+bool Machine::targetLock(){
   using namespace Ultrasonic;
   using namespace Base;
 
@@ -25,6 +27,8 @@ void Machine::targetLock(){
   Serial.println(sonarDetect[2]);
   if((sonarDetect[0] == 0 and sonarDetect[1] == 0 and sonarDetect[2] == 1) or (sonarDetect[0] == 0 and sonarDetect[1] == 1 and sonarDetect[2] == 1)) angleIncrement();
   else if((sonarDetect[0] == 1 and sonarDetect[1] == 0 and sonarDetect[2] == 0) or (sonarDetect[0] == 1 and sonarDetect[1] == 1 and sonarDetect[2] == 0)) angleDecrement();
+  else return true;
+  return false;
 }
 
 void Machine::test(){
