@@ -3,5 +3,5 @@
 using namespace Microphone;
 
 bool Microphone::detect(){
-    return analogRead(A0) > 500;
+    return analogRead(pin) > 200;
 }

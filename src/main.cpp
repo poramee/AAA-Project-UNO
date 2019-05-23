@@ -6,6 +6,7 @@ void setup() {
   System::machineState = System::Status::Idle;
   Machine::mode = Machine::Mode::Service;
   pinMode(11,INPUT_PULLUP);
+  pinMode(13,OUTPUT);
 }
 
 void sonar();
@@ -15,7 +16,9 @@ void loop() {
   if(Machine::mode == Machine::Mode::Sonar) sonar();
   else if(Machine::mode == Machine::Mode::Sound) sound();
   else if(Machine::mode == Machine::Mode::Service){
-    
+    const int read = analogRead(Microphone::pin);
+    if(read > 200) digitalWrite(13,HIGH);
+    else digitalWrite(13,LOW);
   }
 }
 
