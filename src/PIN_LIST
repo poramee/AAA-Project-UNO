@@ -1,0 +1,23 @@
+[ PIN LIST - UNO ]
+
+A0  Mic
+A1  SoftwareSerialTx
+A2  SoftwareSerialRx
+A3  < EMPTY >
+A4  < EMPTY >
+A5  < EMPTY >
+
+T0  < EMPTY >
+R1  < EMPTY >
+ 2  < EMPTY >
+~3  Ultrasonic_Left - Trig
+ 4  Ultrasonic_Left - Echo
+~5  Ultrasonic_Center - Trig
+~6  Ultrasonic_Center - Echo
+ 7  Ultrasonic_Right - Trig
+ 8  Ultrasonic_Right - Echo
+~9  Servo_Base
+~10 Servo_TriggerF
+~11 Servo_TriggerB
+ 12 < EMPTY >
+ 13 < EMPTY >
