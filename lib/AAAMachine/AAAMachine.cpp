@@ -18,6 +18,12 @@ int Machine::targetLock(){
   const int centerPing = center.ping();
   const int rightPing = right.ping();
 
+  Serial.print(leftPing);
+  Serial.print("\t");
+  Serial.print(centerPing);
+  Serial.print("\t");
+  Serial.print(rightPing);
+  Serial.print("    ");
 
   int min = 1e8;
   int minDirection = -1;
