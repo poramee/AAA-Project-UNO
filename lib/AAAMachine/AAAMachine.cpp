@@ -19,7 +19,7 @@ int Machine::targetLock(){
   const int rightPing = right.ping();
 
 
-  int min = 1e9;
+  int min = 1e8;
   int minDirection = -1;
   if(leftPing < min and leftPing > 0){
     min = leftPing;
@@ -34,19 +34,21 @@ int Machine::targetLock(){
     minDirection = 2;
   }
 
+  int returnValue = 0;
   if(min < DEFAULT_TRESHOLD){
     if(minDirection == 0){
       angleIncrement();
-      return 0;
+      returnValue = 0;
     }
     else if(minDirection == 2){
       angleDecrement();
-      return 0;
+      returnValue = 0;
     }
-    else if(minDirection == 1) return 1;
+    else if(minDirection == 1) returnValue = 1;
 
   }
-  else return -1;
+  else returnValue = -1;
+  return returnValue;
 }
 
 void Machine::test(){

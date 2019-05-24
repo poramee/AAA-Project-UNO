@@ -1,10 +1,10 @@
 #include "SerialTalk.hpp"
 
-using namespace Serial;
+using namespace SerialTalk;
 
-SoftwareSerial Serial::softSerial(Serial::pinRx,Serial::pinTx);
+SoftwareSerial SerialTalk::softSerial(SerialTalk::pinRx,SerialTalk::pinTx);
 
-void Serial::sendTo(Command cmd,String str){
+void SerialTalk::sendTo(Command cmd,String str){
     String msg = "";
     if(cmd == Command::Speaker) msg += "SP";
     else if(cmd == Command::LCD) msg += "LC";

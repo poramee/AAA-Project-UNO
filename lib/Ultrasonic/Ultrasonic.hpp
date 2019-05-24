@@ -8,7 +8,7 @@ namespace Ultrasonic{
     const int pinRightTrig = 7;
     const int pinRightEcho = 8;
     const int MAX_DISTANCE = 200;
-    const int DEFAULT_TRESHOLD = 500;
+    const int DEFAULT_TRESHOLD = 700;
 
     class Sonar : public NewPing{
         public:

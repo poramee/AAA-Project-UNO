@@ -8,15 +8,15 @@ int Base::angle = 0;
 
 void Base::init() { servo.attach(pin); }
 void Base::angleIncrement() {
-  if (++angle > 180) angle = 180;
-  else servo.write(angle);
+  if (++angle > 135) angle = 135;
+  servo.write(angle);
 }
 void Base::angleDecrement() {
-  if (--angle < 0)
-    angle = 0;
-  else servo.write(angle);
+  if (--angle < 45)
+    angle = 45;
+  servo.write(angle);
 }
-bool Base::isBounded() { return angle == 180 || angle == 0; }
+bool Base::isBounded() { return angle == 135 || angle == 45; }
 
 bool watchMode = 0;
 void Base::watch(unsigned long delayTime) {

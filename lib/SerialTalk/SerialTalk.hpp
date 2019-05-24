@@ -1,6 +1,7 @@
 #include <SoftwareSerial.h>
+#include <Arduino.h>
 
-namespace Serial{
+namespace SerialTalk{
     const int pinTx = A1;
     const int pinRx = A2;
 
