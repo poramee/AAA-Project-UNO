@@ -13,7 +13,7 @@ namespace Machine{
         Reload,
         Service
     };
-    const int pinButton = 11;
+    const int pinButton = 12;
     extern Mode mode;
 
     void init();

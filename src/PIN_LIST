@@ -19,5 +19,5 @@ R1  < EMPTY >
 ~9  Servo_Base
 ~10 Servo_TriggerF
 ~11 Servo_TriggerB
- 12 < EMPTY >
+ 12 Switch
  13 < EMPTY >

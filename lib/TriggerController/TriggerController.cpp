@@ -13,23 +13,36 @@ void Trigger::init() {
   lastState =  Trigger::Status::Stop;
   lastStateMillis = millis();
 }
-void Trigger::rotateCW() {
-  if(outOfRange()) return;
+void Trigger::rotateCW(bool outOfRangeCheck) {
+  if (outOfRangeCheck and outOfRange()) {
+    Serial.println("OUT OF RANGE, RELOAD");
+    stop();
+    return;
+  }
   if(lastState == Status::RotateCCW){
     rotation -= (millis() - lastStateMillis);
+    digitalWrite(pinForward, HIGH);
+    digitalWrite(pinBackward, LOW);
   }
   else if(lastState == Status::RotateCW){
     rotation += (millis() - lastStateMillis);
   }
+  else{
+    digitalWrite(pinForward, HIGH);
+    digitalWrite(pinBackward, LOW);
+  }
   lastStateMillis = millis();
   lastState = Status::RotateCW;
-
-  digitalWrite(pinForward, HIGH);
-  digitalWrite(pinBackward, LOW);
+}
+void Trigger::rotateCW(){
+  rotateCW(true);
 }
 void Trigger::rotateCCW(bool outOfRangeCheck){
-  if(outOfRangeCheck and outOfRange()) return;
-    if(lastState == Status::RotateCCW){
+  if(outOfRangeCheck and outOfRange()){
+    stop();
+    return;
+  }
+  if(lastState == Status::RotateCCW){
     rotation -= (millis() - lastStateMillis);
   }
   else if(lastState == Status::RotateCW){
@@ -41,7 +54,7 @@ void Trigger::rotateCCW(bool outOfRangeCheck){
   digitalWrite(pinBackward, HIGH);
 }
 void Trigger::rotateCCW() {
-  rotateCCW(false);
+  rotateCCW(true);
 }
 void Trigger::stop() {
   if(lastState == Status::RotateCCW){
@@ -61,5 +74,5 @@ void Trigger::test() {
   rotateCCW();
 }
 bool Trigger::outOfRange(){
-  return (rotation < 0 || rotation >= 3000);
+  return (rotation < 0 || rotation > 5000);
 }

@@ -13,12 +13,15 @@ BottomRow lastBottom = BottomRow::null;
 void SerialTalk::LCD(TopRow top,BottomRow bottom){
     if(lastTop != top){
         lastTop = top;
-        char pp = (char)top;
+        String pp = "";
+        pp += (char)top;
         softSerial.print(pp);
+        Serial.println(pp);
     }
     if(lastBottom != bottom){
         lastBottom = bottom;
-        char pp = (char)bottom;
+        String pp = "";
+        pp += (char)bottom;
         softSerial.print(pp);
     }
 }

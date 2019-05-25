@@ -15,6 +15,7 @@ namespace Trigger{
 
     void init();
     void rotateCW();
+    void rotateCW(bool outOfRangeCheck);
     void rotateCCW();
     void rotateCCW(bool outOfRangeCheck);
     void stop();

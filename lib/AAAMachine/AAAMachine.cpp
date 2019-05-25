@@ -8,23 +8,40 @@ void Machine::init() {
   Base::init();
   Trigger::init();
   SerialTalk::init();
+  pinMode(pinButton,INPUT_PULLUP);
   Serial.begin(9600);
 }
+
+unsigned long long targetMillis = millis();
+int lastLeftPing;
+int lastCenterPing;
+int lastRightPing;
+
 
 int Machine::targetLock(){
   using namespace Ultrasonic;
   using namespace Base;
 
-  const int leftPing = left.ping();
-  const int centerPing = center.ping();
-  const int rightPing = right.ping();
+  int leftPing;
+  int centerPing;
+  int rightPing;
 
-  Serial.print(leftPing);
-  Serial.print("\t");
-  Serial.print(centerPing);
-  Serial.print("\t");
-  Serial.print(rightPing);
-  Serial.print("    ");
+  if (millis() - targetMillis > 50) {
+    leftPing = left.ping();
+    centerPing = center.ping();
+    rightPing = right.ping();
+
+    Serial.print(leftPing);
+    Serial.print("\t");
+    Serial.print(centerPing);
+    Serial.print("\t");
+    Serial.print(rightPing);
+    Serial.print("    ");
+  } else{
+    leftPing = lastLeftPing;
+    centerPing = lastCenterPing;
+    rightPing = lastRightPing;
+  }
 
   int min = 1e8;
   int minDirection = -1;
