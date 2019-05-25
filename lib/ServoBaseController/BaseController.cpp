@@ -24,6 +24,7 @@ bool watchMode = 0;
 unsigned long long timer = 0;
 void Base::watch(unsigned long delayTime) {
   if(millis() - timer < delayTime and timer != 0) return;
+  else timer = millis();
   if (watchMode == 0)
     angleIncrement();
   else

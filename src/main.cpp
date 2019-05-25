@@ -5,7 +5,7 @@ void setup() {
   Machine::init();
   System::machineState = System::Status::Watch;
   Machine::mode = Machine::Mode::Service;
-
+  Base::angle = 45;
 }
 
 void sonar();
@@ -20,7 +20,7 @@ void loop() {
   else if (Machine::mode == Machine::Mode::Sound)
     sound();
   else if (Machine::mode == Machine::Mode::Service) {
-    
+    sound();
   }
 }
 
@@ -104,8 +104,9 @@ void sound() {
   }
 
   if (machineState == Status::Watch) {
-    Serial.println("WATCH");
-    Base::watch();
+    Serial.print("WATCH\t");
+    Serial.println(Base::angle);
+    Base::watch(200);
     LCD(SerialTalk::TopRow::Sound,SerialTalk::BottomRow::Watch);
     if (Microphone::detect())
       machineState = Status::Fire;
