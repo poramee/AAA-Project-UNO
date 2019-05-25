@@ -22,7 +22,7 @@ void loop() {
   else if (Machine::mode == Machine::Mode::Sound)
     sound();
   else if (Machine::mode == Machine::Mode::Service) {
-    sound();
+
   }
 }
 
@@ -37,6 +37,7 @@ void sonar() {
   if (machineState == Status::Idle) {
     if (Machine::getButtonPressed() == 1)
       machineState = Status::Watch;
+      SerialTalk::LCD(SerialTalk::TopRow::Sonar,SerialTalk::BottomRow::Idle);
   } else if (machineState == Status::Watch) {
     Base::watch();
     Serial.println("WATCHING...");
@@ -96,6 +97,7 @@ void reload() {
       Trigger::stop();
       lastPress = LOW;
     }
+    if(Trigger::rotation < 0) Trigger::rotation = 0;
   }
 }
 
