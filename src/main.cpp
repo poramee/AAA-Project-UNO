@@ -14,13 +14,17 @@ void reload();
 
 int cnt = 0;
 
+int lastSounds = analogRead(Microphone::pin);
+
 void loop() {
-  if (Machine::mode == Machine::Mode::Sonar)
-    sonar();
-  else if (Machine::mode == Machine::Mode::Sound)
-    sound();
+  if (Machine::mode == Machine::Mode::Sonar) sonar();
+  else if (Machine::mode == Machine::Mode::Sound) sound();
+  else if(Machine::mode == Machine::Mode::Reload) reload();
   else if (Machine::mode == Machine::Mode::Service) {
     sound();
+    // int read = analogRead(Microphone::pin);
+    // if(read - lastSounds > 600) Serial.println(read - lastSounds);
+    // else lastSounds = read;
   }
 }
 
@@ -102,18 +106,14 @@ void sound() {
   else if(buttonPressed == 2){
     Machine::mode = Machine::Mode::Reload;
   }
-
   if (machineState == Status::Watch) {
-    Serial.print("WATCH\t");
-    Serial.println(Base::angle);
     Base::watch(200);
     LCD(SerialTalk::TopRow::Sound,SerialTalk::BottomRow::Watch);
     if (Microphone::detect())
       machineState = Status::Fire;
   } else if (machineState == Status::Fire) {
     LCD(SerialTalk::TopRow::Sound, SerialTalk::BottomRow::Fire);
-    Serial.println("FIRE");
-    Trigger::rotateCW();
+    Trigger::rotateCW(false);
     delay(500);
     Trigger::stop();
     machineState = Status::Watch;
