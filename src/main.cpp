@@ -3,9 +3,10 @@
 
 void setup() {
   Machine::init();
-  System::machineState = System::Status::Watch;
+  System::machineState = System::Status::Idle;
   Machine::mode = Machine::Mode::Service;
   Base::angle = 45;
+  // pinMode(12,INPUT_PULLUP);
 }
 
 void sonar();
@@ -21,10 +22,16 @@ void loop() {
   else if (Machine::mode == Machine::Mode::Sound) sound();
   else if(Machine::mode == Machine::Mode::Reload) reload();
   else if (Machine::mode == Machine::Mode::Service) {
-    sound();
-    // int read = analogRead(Microphone::pin);
-    // if(read - lastSounds > 600) Serial.println(read - lastSounds);
+    // const int btn = Machine::getButtonPressed();
+    // if(btn > 0) Serial.println(btn);
+    // Serial.println(digitalRead(12));
+    // Serial.println(digitalRead(12));
+    // int read = analogRead(A0);
+    // if(read - lastSounds > 300) Serial.println(read - lastSounds);
     // else lastSounds = read;
+    // if(read > 700) Serial.println(read);
+    // Serial.println(read); 
+    sonar();
   }
 }
 
@@ -35,16 +42,20 @@ void sonar() {
   using namespace SerialTalk;
 
   const int buttonPressed = Machine::getButtonPressed();
-
+  Serial.println(buttonPressed);
   if(buttonPressed == 1){
     if(machineState != Status::Idle) machineState = Status::Idle;
     else machineState = Status::Watch;
   }
   else if(buttonPressed == 2){
     Machine::mode = Machine::Mode::Sound;
+    System::machineState = System::Status::Idle;
     return;
   }
-  if(machineState == Status::Idle) LCD(TopRow::Sonar, BottomRow::Idle);
+  if(machineState == Status::Idle){
+    Trigger::stop();
+    LCD(TopRow::Sonar, BottomRow::Idle);
+  }
   else if (machineState == Status::Watch) {
     Base::watch(0);
     LCD(TopRow::Sonar, BottomRow::Watch);
@@ -105,6 +116,11 @@ void sound() {
   }
   else if(buttonPressed == 2){
     Machine::mode = Machine::Mode::Reload;
+    System::machineState = System::Status::Idle;
+    return;
+  }
+  if(machineState == Status::Idle){
+    LCD(SerialTalk::TopRow::Sound,SerialTalk::BottomRow::Idle);
   }
   if (machineState == Status::Watch) {
     Base::watch(200);
@@ -128,10 +144,13 @@ void reload() {
   const int buttonPressed = Machine::getButtonPressed();
   if (buttonPressed == 2){
     Machine::mode = Machine::Mode::Sonar;
+    System::machineState = System::Status::Idle;
+    return;
   }
   else {
     if (read == HIGH and lastPress == LOW) {
       Trigger::rotateCCW(false);
+      Serial.println("rotate");
       lastPress = HIGH;
     } else if (read == LOW and lastPress == HIGH) {
       Trigger::stop();

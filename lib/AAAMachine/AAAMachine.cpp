@@ -8,7 +8,7 @@ void Machine::init() {
   Base::init();
   Trigger::init();
   SerialTalk::init();
-  pinMode(pinButton,INPUT_PULLUP);
+  pinMode(pinButton,INPUT);
   Serial.begin(9600);
 }
 
