@@ -7,6 +7,7 @@ Mode Machine::mode = Mode::Sonar;
 void Machine::init() {
   Base::init();
   Trigger::init();
+  SerialTalk::init();
   Serial.begin(9600);
 }
 
@@ -69,16 +70,16 @@ void Machine::test(){
 }
 
 int press = 0;
-int lastPress = LOW;
-unsigned long long lastPressMillis = millis();
+int buttonLastPress = LOW;
+unsigned long long buttonLastPressMillis = 0;
 int Machine::getButtonPressed(){
-  if(digitalRead(pinButton) == HIGH and lastPress == LOW){
-    lastPress = HIGH;
+  if(digitalRead(pinButton) == HIGH and buttonLastPress == LOW){
+    buttonLastPress = HIGH;
     ++press;
-    lastPressMillis = millis();
+    buttonLastPressMillis = millis();
   }
-  else if(digitalRead(pinButton) == LOW and lastPress == HIGH) lastPress = LOW;
-  else if(digitalRead(pinButton) == LOW and lastPress == LOW and millis() - lastPressMillis >= 300){
+  else if(digitalRead(pinButton) == LOW and buttonLastPress == HIGH) buttonLastPress = LOW;
+  else if(digitalRead(pinButton) == LOW and buttonLastPress == LOW and millis() - buttonLastPressMillis >= 300){
     const int ret = press;
     press = 0;
     return ret;

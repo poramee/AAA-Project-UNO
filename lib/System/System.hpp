@@ -1,10 +1,10 @@
 namespace System{
-    enum Status{
+    enum class Status{
         Idle,
         Watch,
         TargetLocking,
         Fire,
-        Service
+        Reload
     };
     extern Status machineState;
 }

@@ -7,11 +7,23 @@ namespace SerialTalk{
 
     extern SoftwareSerial softSerial;
 
-    enum Command{
-        Speaker,
-        LCD,
-        BlinkLED
+    enum class TopRow{
+        null = '\0',
+        Sonar = 'M',
+        Sound = 'D',
+        Reload = 'R'
     };
-    
-    void sendTo(Command cmd,String string);
+    enum class BottomRow{
+        null = '\0',
+        Idle = 'i',
+        Watch = 'w',
+        TargetLocking = 'l',
+        Fire = 'f',
+        ReloadNotify = 'r',
+        Blank = 'n'
+    };
+
+    void init();
+    void LCD(TopRow top,BottomRow bottom);
+
 }

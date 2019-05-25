@@ -11,6 +11,8 @@ void setup() {
 
 void sonar();
 void sound();
+void reload();
+void modeSelect();
 
 int cnt = 0;
 
@@ -20,15 +22,7 @@ void loop() {
   else if (Machine::mode == Machine::Mode::Sound)
     sound();
   else if (Machine::mode == Machine::Mode::Service) {
-    // if(Microphone::detect()){
-    //   Serial.print(cnt++);
-    //   Serial.println("FIRE!!");
-    // }
-    // const int read = analogRead(Microphone::pin);
-    if(Microphone::detect()){
-      Serial.print(++cnt);
-      Serial.println("  detect");
-    }
+    sound();
   }
 }
 
@@ -36,9 +30,14 @@ int lockOutOfRange = 0;
 
 void sonar() {
   using namespace System;
-  if (machineState == Status::Idle) {
+
+  if (Machine::getButtonPressed() == 1 and machineState != Status::Idle) {
+    machineState = Status::Idle;
   }
-  if (machineState == Status::Watch) {
+  if (machineState == Status::Idle) {
+    if (Machine::getButtonPressed() == 1)
+      machineState = Status::Watch;
+  } else if (machineState == Status::Watch) {
     Base::watch();
     Serial.println("WATCHING...");
     if (Ultrasonic::left.detect() or Ultrasonic::center.detect() or
@@ -71,13 +70,35 @@ void sound() {
   using namespace Machine;
 
   if (machineState == Status::Watch) {
+    Serial.println("WATCH");
     Base::watch();
     if (Microphone::detect())
       machineState = Status::Fire;
   } else if (machineState == Status::Fire) {
+    Serial.println("FIRE");
     Trigger::rotateCW();
     delay(500);
     Trigger::stop();
     machineState = Status::Watch;
   }
+}
+
+int lastPress = LOW;
+void reload() {
+  const int read = digitalRead(Machine::pinButton);
+  if (Machine::getButtonPressed() == 2)
+    modeSelect();
+  else {
+    if (read == HIGH and lastPress == LOW) {
+      Trigger::rotateCCW();
+      lastPress = HIGH;
+    } else if (read == LOW and lastPress == HIGH) {
+      Trigger::stop();
+      lastPress = LOW;
+    }
+  }
+}
+
+void modeSelect() {
+
 }

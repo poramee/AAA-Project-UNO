@@ -7,9 +7,10 @@
 
 
 namespace Machine{
-    enum Mode{
+    enum class Mode{
         Sonar,
         Sound,
+        Reload,
         Service
     };
     const int pinButton = 11;

@@ -19,13 +19,14 @@ void Base::angleDecrement() {
 bool Base::isBounded() { return angle == 180 || angle == 0; }
 
 bool watchMode = 0;
+unsigned long long timer = 0;
 void Base::watch(unsigned long delayTime) {
+  if(millis() - timer < delayTime and timer != 0) return;
   if (watchMode == 0)
     angleIncrement();
   else
     angleDecrement();
   if (isBounded())
     watchMode = !watchMode;
-  delay(delayTime);
 }
 void Base::watch() { watch(50); }

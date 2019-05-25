@@ -4,11 +4,21 @@ using namespace SerialTalk;
 
 SoftwareSerial SerialTalk::softSerial(SerialTalk::pinRx,SerialTalk::pinTx);
 
-void SerialTalk::sendTo(Command cmd,String str){
-    String msg = "";
-    if(cmd == Command::Speaker) msg += "SP";
-    else if(cmd == Command::LCD) msg += "LC";
-    else if(cmd == Command::BlinkLED) msg += "BL";
-    msg += str;
-    softSerial.println(msg); 
+void SerialTalk::init(){
+    softSerial.begin(9600);
+}
+
+TopRow lastTop = TopRow::null;
+BottomRow lastBottom = BottomRow::null;
+void SerialTalk::LCD(TopRow top,BottomRow bottom){
+    if(lastTop != top){
+        lastTop = top;
+        char pp = (char)top;
+        softSerial.print(pp);
+    }
+    if(lastBottom != bottom){
+        lastBottom = bottom;
+        char pp = (char)bottom;
+        softSerial.print(pp);
+    }
 }
