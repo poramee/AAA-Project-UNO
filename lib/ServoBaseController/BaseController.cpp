@@ -24,7 +24,12 @@ bool watchMode = 0;
 unsigned long long timer = 0;
 void Base::watch(unsigned long delayTime) {
   if(millis() - timer < delayTime and timer != 0) return;
-  else timer = millis();
+  else{
+    timer = millis();
+    Serial.print(angle);
+    Serial.print("  ");
+    Serial.println("turn!!!");
+  }
   if (watchMode == 0)
     angleIncrement();
   else

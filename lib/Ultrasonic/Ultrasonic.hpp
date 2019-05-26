@@ -1,12 +1,12 @@
 #include <NewPing.h>
 
 namespace Ultrasonic{
-    const int pinLeftTrig = 3;
-    const int pinLeftEcho = 4;
-    const int pinCenterTrig = 5;
-    const int pinCenterEcho = 6;
-    const int pinRightTrig = 7;
-    const int pinRightEcho = 8;
+    const int pinLeftTrig = 2;
+    const int pinLeftEcho = 3;
+    const int pinCenterTrig = 4;
+    const int pinCenterEcho = 5;
+    const int pinRightTrig = 6;
+    const int pinRightEcho = 7;
     const int MAX_DISTANCE = 200;
     const int DEFAULT_TRESHOLD = 1500;
 
