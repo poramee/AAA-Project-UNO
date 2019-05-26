@@ -4,9 +4,10 @@
 void setup() {
   Machine::init();
   System::machineState = System::Status::Idle;
-  Machine::mode = Machine::Mode::Service;
+  Machine::mode = Machine::Mode::Sonar;
   Base::servo.write(Base::angle);
-  // pinMode(12,INPUT_PULLUP);
+  delay(300);
+  SerialTalk::LCD(SerialTalk::TopRow::Sonar, SerialTalk::BottomRow::Idle);
 }
 
 void sonar();
@@ -25,18 +26,18 @@ void loop() {
   else if (Machine::mode == Machine::Mode::Reload)
     reload();
   else if (Machine::mode == Machine::Mode::Service) {
-    Base::watch(250);
+    // Base::watch(250);
     // System::machineState = System::Status::Watch;
     // sound();
     // LCD(SerialTalk::TopRow::Sound,SerialTalk::BottomRow::null);
     // delay(1000);
     // LCD(SerialTalk::TopRow::Reload, SerialTalk::BottomRow::null);
     // delay(1000);
-    // Serial.print(Ultrasonic::left.ping());
-    // Serial.print("\t");
-    // Serial.print(Ultrasonic::center.ping());
-    // Serial.print("\t");
-    // Serial.println(Ultrasonic::right.ping());
+    Serial.print(Ultrasonic::left.ping());
+    Serial.print("\t");
+    Serial.print(Ultrasonic::center.ping());
+    Serial.print("\t");
+    Serial.println(Ultrasonic::right.ping());
 
     // Trigger::rotateCW();
     // Serial.println(digitalRead(12));
@@ -46,7 +47,7 @@ void loop() {
     // sonar();
     //  Base::watch();
     // Serial.println(digitalRead(12));
-    delay(100);
+    delay(50);
   }
 }
 
@@ -72,6 +73,7 @@ void sonar() {
     Trigger::stop();
     Base::servo.write(Base::angle);
     LCD(TopRow::Sonar, BottomRow::Idle);
+
   } else if (machineState == Status::Watch) {
     Base::watch(0);
     LCD(TopRow::Sonar, BottomRow::Watch);
@@ -108,9 +110,8 @@ void sonar() {
       machineState = Status::Watch;
   } else if (machineState == Status::Fire) {
     if (Trigger::outOfRange()) {
-      Trigger::stop();
-      LCD(TopRow::Sonar, BottomRow::ReloadNotify);
-      Base::servo.write(Base::angle);
+      machineState = Status::Reload;
+      return;
     } else {
       LCD(TopRow::Sonar, BottomRow::Fire);
       Serial.println("FIRE");
@@ -126,6 +127,10 @@ void sonar() {
         Trigger::stop();
       }
     }
+  } else if (machineState == Status::Reload) {
+    Trigger::stop();
+    LCD(TopRow::Sonar, BottomRow::ReloadNotify);
+    Base::servo.write(Base::angle);
   }
 }
 
@@ -149,9 +154,7 @@ void sound() {
 
   if (machineState == Status::Idle) {
     LCD(SerialTalk::TopRow::Sound, SerialTalk::BottomRow::Idle);
-  }
-  else if (machineState == Status::Watch) {
-    // Serial.println("MIC-WATCHING...");
+  } else if (machineState == Status::Watch) {
     LCD(SerialTalk::TopRow::Sound, SerialTalk::BottomRow::Watch);
     Base::watch(250);
     if (Microphone::detect()) {
@@ -159,17 +162,20 @@ void sound() {
       Serial.println("Detected");
     }
   } else if (machineState == Status::Fire) {
-    if (Trigger::outOfRange()){
-      Trigger::stop();
-      LCD(TopRow::Sound, BottomRow::ReloadNotify);
-    }
-    else {
+    if (Trigger::outOfRange()) {
+      machineState = Status::Reload;
+      return;
+    } else {
       LCD(SerialTalk::TopRow::Sound, SerialTalk::BottomRow::Fire);
       Trigger::rotateCW(false);
       delay(500);
       Trigger::stop();
       machineState = Status::Watch;
     }
+  } else if (machineState == Status::Reload) {
+    Trigger::stop();
+    LCD(TopRow::Sound, BottomRow::ReloadNotify);
+    Base::servo.write(Base::angle);
   }
 }
 
@@ -182,9 +188,9 @@ void reload() {
   if (buttonPressed == 2) {
     Machine::mode = Machine::Mode::Sonar;
     System::machineState = System::Status::Idle;
-    if(Trigger::rotation < 0) Trigger::rotation = 0;
+    if (Trigger::rotation < 0) Trigger::rotation = 0;
     return;
-  } else if(buttonPressed == 0){
+  } else if (buttonPressed == 0) {
     if (read == HIGH and lastPress == LOW) {
       Trigger::rotateCCW(false);
       Serial.println("rotate");

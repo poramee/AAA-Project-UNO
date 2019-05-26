@@ -74,5 +74,5 @@ void Trigger::test() {
   rotateCCW();
 }
 bool Trigger::outOfRange(){
-  return (rotation < 0 || rotation > 5000);
+  return (rotation < 0 || rotation > 7000);
 }
