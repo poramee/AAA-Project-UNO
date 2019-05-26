@@ -22,16 +22,25 @@ void loop() {
   else if (Machine::mode == Machine::Mode::Sound) sound();
   else if(Machine::mode == Machine::Mode::Reload) reload();
   else if (Machine::mode == Machine::Mode::Service) {
-    // const int btn = Machine::getButtonPressed();
-    // if(btn > 0) Serial.println(btn);
+    // System::machineState = System::Status::Watch;
+    // sound();
+    // LCD(SerialTalk::TopRow::Sound,SerialTalk::BottomRow::null);
+    // delay(1000);
+    // LCD(SerialTalk::TopRow::Reload, SerialTalk::BottomRow::null);
+    // delay(1000);
+    Serial.print(Ultrasonic::left.ping());
+    Serial.print("\t");
+    Serial.print(Ultrasonic::center.ping());
+    Serial.print("\t");
+    Serial.println(Ultrasonic::right.ping());
+
+    // Trigger::rotateCW();
     // Serial.println(digitalRead(12));
     // Serial.println(digitalRead(12));
-    // int read = analogRead(A0);
-    // if(read - lastSounds > 300) Serial.println(read - lastSounds);
-    // else lastSounds = read;
-    // if(read > 700) Serial.println(read);
+    // Microphone::detect();
     // Serial.println(read); 
-    sonar();
+    // sonar();
+  //  Base::watch();
   }
 }
 
@@ -111,7 +120,11 @@ void sound() {
   const int buttonPressed = Machine::getButtonPressed();
 
   if(buttonPressed == 1){
-    if(machineState != Status::Idle) machineState = Status::Idle;
+    if(machineState != Status::Idle){
+      machineState = Status::Idle;
+      Base::watch(200);
+      delay(1000);
+    }
     else if(machineState == Status::Idle) machineState = Status::Watch;
   }
   else if(buttonPressed == 2){
@@ -125,8 +138,10 @@ void sound() {
   if (machineState == Status::Watch) {
     Base::watch(200);
     LCD(SerialTalk::TopRow::Sound,SerialTalk::BottomRow::Watch);
-    if (Microphone::detect())
+    if (Microphone::detect()){
       machineState = Status::Fire;
+      Serial.println("Detected");
+    }
   } else if (machineState == Status::Fire) {
     LCD(SerialTalk::TopRow::Sound, SerialTalk::BottomRow::Fire);
     Trigger::rotateCW(false);
