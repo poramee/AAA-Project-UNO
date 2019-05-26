@@ -3,9 +3,8 @@
 
 void setup() {
   Machine::init();
-  System::machineState = System::Status::Watch;
-  Machine::mode = Machine::Mode::Sonar;
-  Base::angle = 45;
+  System::machineState = System::Status::Idle;
+  Machine::mode = Machine::Mode::Service;
   Base::servo.write(Base::angle);
   // pinMode(12,INPUT_PULLUP);
 }
@@ -26,18 +25,18 @@ void loop() {
   else if (Machine::mode == Machine::Mode::Reload)
     reload();
   else if (Machine::mode == Machine::Mode::Service) {
-    // Base::watch(250);
+    Base::watch(250);
     // System::machineState = System::Status::Watch;
     // sound();
     // LCD(SerialTalk::TopRow::Sound,SerialTalk::BottomRow::null);
     // delay(1000);
     // LCD(SerialTalk::TopRow::Reload, SerialTalk::BottomRow::null);
     // delay(1000);
-    Serial.print(Ultrasonic::left.ping());
-    Serial.print("\t");
-    Serial.print(Ultrasonic::center.ping());
-    Serial.print("\t");
-    Serial.println(Ultrasonic::right.ping());
+    // Serial.print(Ultrasonic::left.ping());
+    // Serial.print("\t");
+    // Serial.print(Ultrasonic::center.ping());
+    // Serial.print("\t");
+    // Serial.println(Ultrasonic::right.ping());
 
     // Trigger::rotateCW();
     // Serial.println(digitalRead(12));

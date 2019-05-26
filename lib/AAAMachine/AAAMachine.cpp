@@ -90,13 +90,18 @@ int press = 0;
 int buttonLastPress = LOW;
 unsigned long long buttonLastPressMillis = 0;
 int Machine::getButtonPressed(){
-  if(digitalRead(pinButton) == HIGH and buttonLastPress == LOW){
+  const int read = digitalRead(pinButton);
+  if(read == HIGH and buttonLastPress == LOW){
     buttonLastPress = HIGH;
     ++press;
     buttonLastPressMillis = millis();
   }
-  else if(digitalRead(pinButton) == LOW and buttonLastPress == HIGH) buttonLastPress = LOW;
-  else if(digitalRead(pinButton) == LOW and buttonLastPress == LOW and millis() - buttonLastPressMillis >= 300){
+  else if(read == HIGH and buttonLastPress == HIGH and millis() - buttonLastPressMillis >= 300){
+    press = 0;
+    return 0;
+  } 
+  else if(read == LOW and buttonLastPress == HIGH) buttonLastPress = LOW;
+  else if(read == LOW and buttonLastPress == LOW and millis() - buttonLastPressMillis >= 300){
     const int ret = press;
     press = 0;
     return ret;

@@ -4,21 +4,24 @@
 using namespace Base;
 
 Servo Base::servo;
-int Base::angle = 0;
+int Base::angle = 30;
 
-void Base::init() { servo.attach(pin); }
+void Base::init() {
+  servo.attach(pin);
+  servo.write(angle);
+}
 void Base::angleIncrement() {
   angle += 5;
-  if (angle > 135) angle = 135;
+  if (angle > 150) angle = 150;
   servo.write(angle);
 }
 void Base::angleDecrement() {
   angle -= 5;
-  if (angle < 45)
-    angle = 45;
+  if (angle < 30)
+    angle = 30;
   servo.write(angle);
 }
-bool Base::isBounded() { return angle == 135 || angle == 45; }
+bool Base::isBounded() { return angle == 150 || angle == 30; }
 
 bool watchMode = 0;
 unsigned long long timer = 0;
