@@ -62,8 +62,10 @@ void sonar() {
   if (buttonPressed == 1) {
     if (machineState != Status::Idle)
       machineState = Status::Idle;
-    else
+    else{
       machineState = Status::Watch;
+      // LCD(TopRow::Sonar, BottomRow::Watch);
+    }
   } else if (buttonPressed == 2) {
     Machine::mode = Machine::Mode::Sound;
     System::machineState = System::Status::Idle;
@@ -71,7 +73,6 @@ void sonar() {
   }
   if (machineState == Status::Idle) {
     Trigger::stop();
-    Base::servo.write(Base::angle);
     LCD(TopRow::Sonar, BottomRow::Idle);
 
   } else if (machineState == Status::Watch) {
@@ -81,33 +82,43 @@ void sonar() {
     double avgLeft = 0;
     double avgCenter = 0;
     double avgRight = 0;
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 10; ++i) {
       avgLeft += Ultrasonic::left.ping();
-      delay(5);
       avgCenter += Ultrasonic::center.ping();
-      delay(5);
       avgRight += Ultrasonic::right.ping();
       delay(5);
     }
-    avgLeft /= 5;
-    avgCenter /= 5;
-    avgRight /= 5;
-    if (avgLeft < Ultrasonic::DEFAULT_TRESHOLD or
-        avgCenter < Ultrasonic::DEFAULT_TRESHOLD or
-        avgRight < Ultrasonic::DEFAULT_TRESHOLD) {
-      Serial.println("DETECTED");
+    avgLeft /= 10;
+    avgCenter /= 10;
+    avgRight /= 10;
+    if ((avgLeft < Ultrasonic::DEFAULT_TRESHOLD and avgLeft > 0) or
+        (avgCenter < Ultrasonic::DEFAULT_TRESHOLD and avgCenter > 0) or
+        (avgRight < Ultrasonic::DEFAULT_TRESHOLD and avgRight > 0)) {
+      Serial.print("DETECTED\t");
+      Serial.print(avgLeft);
+      Serial.print("\t");
+      Serial.print(avgCenter);
+      Serial.print("\t");
+      Serial.println(avgRight);
       machineState = Status::TargetLocking;
     }
     delay(50);
   } else if (machineState == Status::TargetLocking) {
-    LCD(TopRow::Sonar, BottomRow::TargetLocking);
+    // LCD(TopRow::Sonar, BottomRow::TargetLocking);
     Serial.print("LOCKING...");
     const int returnValue = Machine::targetLock();
     Serial.println(returnValue);
     if (returnValue == 1)
       machineState = Status::Fire;
-    else if (returnValue == -1)
+    if (Machine::targetLock() == -1) {
+      ++lockOutOfRange;
+    } else {
+      lockOutOfRange = 0;
+    }
+    if (lockOutOfRange >= 5) {
       machineState = Status::Watch;
+      lockOutOfRange = 0;
+    }
   } else if (machineState == Status::Fire) {
     if (Trigger::outOfRange()) {
       machineState = Status::Reload;
