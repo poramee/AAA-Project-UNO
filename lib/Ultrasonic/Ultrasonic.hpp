@@ -1,13 +1,14 @@
 #include <NewPing.h>
 
 namespace Ultrasonic{
-    const int pinLeftTrig = 3;
-    const int pinLeftEcho = 4;
-    const int pinCenterTrig = 5;
-    const int pinCenterEcho = 6;
-    const int pinRightTrig = 7;
-    const int pinRightEcho = 8;
-    const int MAX_DISTANCE = 200;
+    const int pinLeftTrig = 2;
+    const int pinLeftEcho = 3;
+    const int pinCenterTrig = 4;
+    const int pinCenterEcho = 5;
+    const int pinRightTrig = 6;
+    const int pinRightEcho = 7;
+    const int MAX_DISTANCE = 150;
+    const int DEFAULT_TRESHOLD = 2000;
 
     class Sonar : public NewPing{
         public:
@@ -18,7 +19,7 @@ namespace Ultrasonic{
             return p < treshold && p > 0;
         }
         bool detect(){
-            return detect(3000);
+            return detect(Ultrasonic::DEFAULT_TRESHOLD);
         }
     };
 
