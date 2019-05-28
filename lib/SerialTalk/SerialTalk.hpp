@@ -20,7 +20,8 @@ namespace SerialTalk{
         TargetLocking = 'l',
         Fire = 'f',
         ReloadNotify = 'r',
-        Blank = 'n'
+        Blank = 'n',
+        Error = 'e'
     };
 
     void init();
