@@ -1,11 +1,10 @@
 namespace System{
-    enum Status{
+    enum class Status{
         Idle,
         Watch,
         TargetLocking,
         Fire,
-        Service
+        Reload
     };
-    const int pinSwitch = 11;
     extern Status machineState;
 }

@@ -4,29 +4,40 @@
 using namespace Base;
 
 Servo Base::servo;
-int Base::angle = 0;
+int Base::angle = 30;
 
-void Base::init() { servo.attach(pin); }
+void Base::init() {
+  servo.attach(pin);
+  servo.write(angle);
+}
 void Base::angleIncrement() {
-  if (++angle > 180)
-    angle = 180;
+  angle += 5;
+  if (angle > 150) angle = 150;
   servo.write(angle);
 }
 void Base::angleDecrement() {
-  if (--angle < 0)
-    angle = 0;
+  angle -= 5;
+  if (angle < 30)
+    angle = 30;
   servo.write(angle);
 }
-bool Base::isBounded() { return angle == 180 || angle == 0; }
+bool Base::isBounded() { return angle == 150 || angle == 30; }
 
 bool watchMode = 0;
+unsigned long long timer = 0;
 void Base::watch(unsigned long delayTime) {
+  if(millis() - timer < delayTime and timer != 0) return;
+  else{
+    timer = millis();
+    Serial.print(angle);
+    Serial.print("  ");
+    Serial.println("turn!!!");
+  }
   if (watchMode == 0)
     angleIncrement();
   else
     angleDecrement();
   if (isBounded())
     watchMode = !watchMode;
-  delay(delayTime);
 }
 void Base::watch() { watch(50); }
